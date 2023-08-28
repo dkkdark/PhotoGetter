@@ -34,14 +34,7 @@ class CameraState extends ConsumerState<CameraScreen> {
   @override
   void initState() {
     super.initState();
-    _controller = CameraController(
-      widget.camera,
-      ResolutionPreset.medium,
-      enableAudio: false
-    );
-    _controller.setFlashMode(FlashMode.off);
-
-    _initializeControllerFuture = _controller.initialize();
+    initCamera();
 
     _isButtonEnable = true;
   }
@@ -52,26 +45,38 @@ class CameraState extends ConsumerState<CameraScreen> {
     super.dispose();
   }
 
+  Future initCamera() async {
+    _controller = CameraController(
+        widget.camera,
+        ResolutionPreset.medium,
+        enableAudio: false,
+        imageFormatGroup: ImageFormatGroup.yuv420,
+    );
+    try {
+      _initializeControllerFuture = _controller.initialize();
+      _initializeControllerFuture.then((_) {
+        if (!mounted) return;
+        setState(() {});
+      });
+    } on CameraException catch (e) {
+      debugPrint("camera error $e");
+    }
+  }
+
   void loadImage() async {
     XFile? image;
 
     String comment = valueController.text;
     valueController.text = "";
 
-    if (kIsWeb) {
-      // there is problem with uploading multipart in web
-      var snackBar = const SnackBar(
-        content: Text("Don't use web browser to upload image"),
-      );
-      ScaffoldMessenger.of(context).showSnackBar(snackBar);
-      return;
-    } else if (Platform.isAndroid || Platform.isIOS) {
-      PermissionStatus permissionMobile = await Permission.camera.status;
-      if (permissionMobile.isGranted == true) {
-        await _initializeControllerFuture;
-        image = await _controller.takePicture();
-      }
+    try {
+      await _initializeControllerFuture;
+      await _controller.setFlashMode(FlashMode.off);
+      image = await _controller.takePicture();
+    } on CameraException catch (e) {
+      debugPrint('Error occured while taking picture: $e');
     }
+
     Position? position;
     var serviceEnabled = await Geolocator.isLocationServiceEnabled();
     var locationPermission = await Geolocator.checkPermission();

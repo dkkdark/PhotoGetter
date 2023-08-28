@@ -14,7 +14,6 @@ class PhotoService {
     required String filename, required String comment,
     required double? lat, required double? long
 }) async {
-    debugPrint("comment $comment");
     var formData = FormData.fromMap({
       "id": id,
       "file": await MultipartFile.fromFile(path, filename: filename),
@@ -26,7 +25,7 @@ class PhotoService {
       final request = await _dio.post('/post-photo', data: formData);
       return request.statusCode;
     } catch (e) {
-      debugPrint("postPhoto err ${e}");
+      debugPrint("postPhoto service err ${e}");
       rethrow;
     }
   }

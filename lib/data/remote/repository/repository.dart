@@ -17,7 +17,7 @@ class PhotoRepository {
     required double? long
 }) async {
     try {
-      debugPrint("send 111");
+      debugPrint("postPhoto repository called");
       if (file?.path == "" || file?.path == null || file == null) {
         throw WrongPathException();
       }

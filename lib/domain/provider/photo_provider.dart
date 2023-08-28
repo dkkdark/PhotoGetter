@@ -24,10 +24,10 @@ class PhotoDataNotifier extends StateNotifier<PhotoState> {
   PhotoRepository photoRepository;
 
   Future<void> sendPhoto(XFile? file, String comment, double? lat, double? long) async {
-    debugPrint("send");
+    debugPrint("sendPhoto called");
     state = state.copyWith(isLoading: true);
     await photoRepository.postPhoto(file: file, comment: comment, lat: lat, long: long).then((data) {
-      debugPrint("success ${data.body}");
+      debugPrint("result of sendPhoto: ${data.body}");
       state = state.copyWith(message: data.body, isLoading: false);
     });
   }
