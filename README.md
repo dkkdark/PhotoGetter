@@ -1,16 +1,14 @@
 # photo_getter
 
-A new Flutter project.
+Приложение предназначено только для Android и IOS.
+Основной стэк: riverpod, dio, freezed, geolocator
 
-## Getting Started
 
-This project is a starting point for a Flutter application.
+![ezgif-5-6515154564](https://github.com/dkkdark/PhotoGetter/assets/49618961/d1d3ba97-78f1-4de6-8067-6fba5a9bce6f)
 
-A few resources to get you started if this is your first Flutter project:
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+![ezgif-5-729c8a62d6](https://github.com/dkkdark/PhotoGetter/assets/49618961/5efd5aae-08f5-4c2d-9e1f-0d8a8ac6cdb1)
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+
+<img width="427" alt="ezgif-5-19efc1f663" src="https://github.com/dkkdark/PhotoGetter/assets/49618961/76b8c257-5019-4d91-a514-dd51cea63ac0">
+
