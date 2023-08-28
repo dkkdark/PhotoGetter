@@ -1,27 +1,17 @@
-import 'dart:io';
-
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:photo_getter/domain/provider/photo_provider.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
-
 
 class CameraScreen extends ConsumerStatefulWidget {
-  const CameraScreen({
-    super.key,
-    required this.camera
-  });
+  const CameraScreen({super.key, required this.camera});
 
   final CameraDescription camera;
 
   @override
   CameraState createState() => CameraState();
 }
-
 
 class CameraState extends ConsumerState<CameraScreen> {
   late CameraController _controller;
@@ -47,10 +37,10 @@ class CameraState extends ConsumerState<CameraScreen> {
 
   Future initCamera() async {
     _controller = CameraController(
-        widget.camera,
-        ResolutionPreset.medium,
-        enableAudio: false,
-        imageFormatGroup: ImageFormatGroup.yuv420,
+      widget.camera,
+      ResolutionPreset.medium,
+      enableAudio: false,
+      imageFormatGroup: ImageFormatGroup.yuv420,
     );
     try {
       _initializeControllerFuture = _controller.initialize();
@@ -80,12 +70,16 @@ class CameraState extends ConsumerState<CameraScreen> {
     Position? position;
     var serviceEnabled = await Geolocator.isLocationServiceEnabled();
     var locationPermission = await Geolocator.checkPermission();
-    if (serviceEnabled && (locationPermission == LocationPermission.always || locationPermission == LocationPermission.whileInUse)) {
+    if (serviceEnabled &&
+        (locationPermission == LocationPermission.always ||
+            locationPermission == LocationPermission.whileInUse)) {
       position = await Geolocator.getCurrentPosition(
           desiredAccuracy: LocationAccuracy.high);
     }
 
-    ref.read(photoDataProvider.notifier).sendPhoto(image, comment, position?.latitude, position?.longitude);
+    ref
+        .read(photoDataProvider.notifier)
+        .sendPhoto(image, comment, position?.latitude, position?.longitude);
   }
 
   void onSendClicked() {
@@ -97,71 +91,68 @@ class CameraState extends ConsumerState<CameraScreen> {
 
   @override
   Widget build(BuildContext context) {
-    ref.listen(photoDataProvider, ((oldValue, newValue) {
-      if (newValue.message != null && !newValue.isLoading) {
-         var snackBar = SnackBar(
-          content: Text(newValue.message!),
-         );
-         ScaffoldMessenger.of(context).showSnackBar(snackBar);
-      }
-      if (!newValue.isLoading) {
-        setState(() {
-          _isButtonEnable = true;
-        });
-      }
-    }),
+    ref.listen(
+      photoDataProvider,
+      ((oldValue, newValue) {
+        if (newValue.message != null && !newValue.isLoading) {
+          var snackBar = SnackBar(
+            content: Text(newValue.message!),
+          );
+          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+        }
+        if (!newValue.isLoading) {
+          setState(() {
+            _isButtonEnable = true;
+          });
+        }
+      }),
     );
 
     return Scaffold(
         body: SafeArea(
-          child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  FutureBuilder<void>(
-                    future: _initializeControllerFuture,
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.done) {
-                        return SizedBox(
-                            width:  MediaQuery.of(context).size.width,
-                            height:  MediaQuery.of(context).size.height * 0.7,
-                            child: CameraPreview(_controller)
-                        );
-                      } else {
-                        return const Center(child: CircularProgressIndicator());
-                      }
-                    },
-                  ),
-                  const SizedBox(height: 30),
-                    Column(
-                      children: [
-                        CameraTextField(valueController: valueController,),
-                      const SizedBox(height: 20),
-                      FilledButton(
-                        onPressed: () {
-                          _isButtonEnable ? onSendClicked() : null;
-                        },
-                        style: const ButtonStyle(backgroundColor: MaterialStatePropertyAll(Colors.blueAccent)),
-                        child: Text(_isButtonEnable ? "Send" : "Processing...",
-                            style: const TextStyle(color: Colors.white, fontSize: 16),
-                        ),
-                      ),
-                      const SizedBox(height: 20),
-                    ]
-                    ),
-                ],
-              )
+      child: SingleChildScrollView(
+          child: Column(
+        children: [
+          FutureBuilder<void>(
+            future: _initializeControllerFuture,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.done) {
+                return SizedBox(
+                    width: MediaQuery.of(context).size.width,
+                    height: MediaQuery.of(context).size.height * 0.7,
+                    child: CameraPreview(_controller));
+              } else {
+                return const Center(child: CircularProgressIndicator());
+              }
+            },
           ),
-        )
-    );
+          const SizedBox(height: 30),
+          Column(children: [
+            CameraTextField(
+              valueController: valueController,
+            ),
+            const SizedBox(height: 20),
+            FilledButton(
+              onPressed: () {
+                _isButtonEnable ? onSendClicked() : null;
+              },
+              style: const ButtonStyle(
+                  backgroundColor: MaterialStatePropertyAll(Colors.blueAccent)),
+              child: Text(
+                _isButtonEnable ? "Send" : "Processing...",
+                style: const TextStyle(color: Colors.white, fontSize: 16),
+              ),
+            ),
+            const SizedBox(height: 20),
+          ]),
+        ],
+      )),
+    ));
   }
 }
 
-
 class CameraTextField extends StatefulWidget {
-  const CameraTextField({
-    super.key,
-    required this.valueController
-  });
+  const CameraTextField({super.key, required this.valueController});
 
   final TextEditingController valueController;
 
@@ -170,7 +161,6 @@ class CameraTextField extends StatefulWidget {
 }
 
 class CameraTextFieldState extends State<CameraTextField> {
-
   @override
   Widget build(BuildContext context) {
     return Padding(

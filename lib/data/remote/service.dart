@@ -9,11 +9,13 @@ class PhotoService {
     ),
   );
 
-  Future<int?> postPhoto({
-    required String id, required String path,
-    required String filename, required String comment,
-    required double? lat, required double? long
-}) async {
+  Future<int?> postPhoto(
+      {required String id,
+      required String path,
+      required String filename,
+      required String comment,
+      required double? lat,
+      required double? long}) async {
     var formData = FormData.fromMap({
       "id": id,
       "file": await MultipartFile.fromFile(path, filename: filename),

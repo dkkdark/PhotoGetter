@@ -16,38 +16,28 @@ Future<void> main() async {
     permission = await Geolocator.requestPermission();
   }
 
-  SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-      statusBarColor: Colors.blueAccent
-  ));
+  SystemChrome.setSystemUIOverlayStyle(
+      const SystemUiOverlayStyle(statusBarColor: Colors.blueAccent));
 
-  runApp(ProviderScope(
-    child:
-      PhotoGetterApp(camera: firstCamera)
-  ));
+  runApp(ProviderScope(child: PhotoGetterApp(camera: firstCamera)));
 }
 
 class PhotoGetterApp extends StatelessWidget {
-  const PhotoGetterApp({
-    super.key,
-    required this.camera
-  });
+  const PhotoGetterApp({super.key, required this.camera});
 
   final CameraDescription camera;
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blueAccent),
-        useMaterial3: true,
-        appBarTheme: const AppBarTheme(
-          systemOverlayStyle: SystemUiOverlayStyle(
-            statusBarColor: Colors.blueAccent,
-          )
-        )
-      ),
-      home: CameraScreen(camera: camera)
-    );
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+            colorScheme: ColorScheme.fromSeed(seedColor: Colors.blueAccent),
+            useMaterial3: true,
+            appBarTheme: const AppBarTheme(
+                systemOverlayStyle: SystemUiOverlayStyle(
+              statusBarColor: Colors.blueAccent,
+            ))),
+        home: CameraScreen(camera: camera));
   }
 }

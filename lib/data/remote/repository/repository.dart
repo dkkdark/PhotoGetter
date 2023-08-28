@@ -1,6 +1,5 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:native_exif/native_exif.dart';
 import 'package:photo_getter/data/remote/exceptions.dart';
 import 'package:photo_getter/data/remote/service.dart';
 import 'package:uuid/uuid.dart';
@@ -12,10 +11,11 @@ class PhotoRepository {
 
   PhotoRepository(this._predApi);
 
-  Future<PostPhotoResult> postPhoto({
-    required XFile? file, required String comment, required double? lat,
-    required double? long
-}) async {
+  Future<PostPhotoResult> postPhoto(
+      {required XFile? file,
+      required String comment,
+      required double? lat,
+      required double? long}) async {
     try {
       debugPrint("postPhoto repository called");
       if (file?.path == "" || file?.path == null || file == null) {
@@ -31,8 +31,7 @@ class PhotoRepository {
           filename: filename,
           comment: comment,
           lat: lat,
-          long: long
-      );
+          long: long);
 
       if (res == 200) {
         return const PostPhotoResult(body: "Image was loaded!");
@@ -40,13 +39,16 @@ class PhotoRepository {
       throw InvalidResponse();
     } on WrongPathException {
       debugPrint("path was null");
-      return const PostPhotoResult(body: "Image wasn't loaded due to incorrect data");
+      return const PostPhotoResult(
+          body: "Image wasn't loaded due to incorrect data");
     } on InvalidResponse {
       debugPrint("server error");
-      return const PostPhotoResult(body: "Image wasn't loaded due to server problem");
+      return const PostPhotoResult(
+          body: "Image wasn't loaded due to server problem");
     } catch (e) {
       debugPrint(e.toString());
-      return const PostPhotoResult(body: "Image wasn't loaded due to some error");
+      return const PostPhotoResult(
+          body: "Image wasn't loaded due to some error");
     }
   }
 }
